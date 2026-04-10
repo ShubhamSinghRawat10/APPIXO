@@ -3,6 +3,7 @@ import axios from "axios";
 import AceEditor from "react-ace";
 import "./App.css";
 import LiquidChrome from "./components/LiquidChrome";
+import Loading from "./components/Loading";
 import {
   defaultSourceLanguage,
   defaultTargetLanguage,
@@ -190,7 +191,7 @@ function App() {
       <main className="app-frame">
         <section className="hero-panel">
           <div className="hero-copy">
-            {/* <p className="eyebrow">Appixo Rebuilt</p> */}
+            <Loading/>
             <h1>APPIXO</h1>
             <p>Code language convertor</p>
           </div>
