@@ -32,7 +32,7 @@ function App() {
   const [sourceLanguage, setSourceLanguage] = useState(defaultSourceLanguage);
   const [targetLanguage, setTargetLanguage] = useState(defaultTargetLanguage);
   const [sourceCode, setSourceCode] = useState(initialSourceCode);
-  const [instructions, setInstructions] = useState(
+  const [instructions, setInstructions] = useState(+
     "Prefer clean, idiomatic output and preserve the same behavior."
   );
   const [convertedCode, setConvertedCode] = useState("");
