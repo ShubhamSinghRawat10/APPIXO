@@ -14,6 +14,35 @@ export const languageOptions = [
   { value: "php", label: "PHP", aceMode: "php" },
 ];
 
+export const fileExtensionLanguageMap = {
+  ".c": "c",
+  ".h": "c",
+  ".cc": "cpp",
+  ".cpp": "cpp",
+  ".cxx": "cpp",
+  ".hh": "cpp",
+  ".hpp": "cpp",
+  ".hxx": "cpp",
+  ".js": "javascript",
+  ".jsx": "javascript",
+  ".cjs": "javascript",
+  ".mjs": "javascript",
+  ".ts": "typescript",
+  ".tsx": "typescript",
+  ".cts": "typescript",
+  ".mts": "typescript",
+  ".py": "python",
+  ".java": "java",
+  ".go": "go",
+  ".rs": "rust",
+  ".cs": "csharp",
+  ".php": "php",
+};
+
+export const acceptedSourceFileExtensions = Object.keys(
+  fileExtensionLanguageMap
+).join(",");
+
 export const instructionPresets = [
   "Preserve variable names where possible.",
   "Prefer idiomatic target language syntax.",
@@ -179,3 +208,170 @@ export const getLanguageOption = (value) =>
 
 export const getAceMode = (value) =>
   getLanguageOption(value)?.aceMode || "text";
+
+export const getLanguageFromFileName = (fileName = "") => {
+  const normalizedFileName = fileName.toLowerCase();
+  const matchingExtension = Object.keys(fileExtensionLanguageMap)
+    .sort((first, second) => second.length - first.length)
+    .find((extension) => normalizedFileName.endsWith(extension));
+
+  return matchingExtension
+    ? fileExtensionLanguageMap[matchingExtension]
+    : null;
+};
+
+const detectionRules = {
+  c: [
+    { pattern: /#include\s*<stdio\.h>/, weight: 28 },
+    { pattern: /\bprintf\s*\(/, weight: 14 },
+    { pattern: /\bscanf\s*\(/, weight: 14 },
+    { pattern: /\bmalloc\s*\(/, weight: 10 },
+    { pattern: /\bint\s+main\s*\(/, weight: 10 },
+    { pattern: /->\s*[A-Za-z_]\w*/, weight: 6 },
+  ],
+  cpp: [
+    { pattern: /#include\s*<iostream>/, weight: 28 },
+    { pattern: /\bstd::\w+/, weight: 18 },
+    { pattern: /\bcout\s*<</, weight: 12 },
+    { pattern: /\bcin\s*>>/, weight: 12 },
+    { pattern: /\btemplate\s*</, weight: 12 },
+    { pattern: /\bvector\s*</, weight: 8 },
+    { pattern: /\busing\s+namespace\s+std\b/, weight: 8 },
+  ],
+  javascript: [
+    { pattern: /\bconsole\.log\s*\(/, weight: 14 },
+    { pattern: /\bfunction\s+\w+\s*\(/, weight: 12 },
+    { pattern: /=>/, weight: 10 },
+    { pattern: /\b(const|let|var)\s+\w+\s*=/, weight: 10 },
+    { pattern: /\brequire\s*\(/, weight: 9 },
+    { pattern: /\bmodule\.exports\b/, weight: 9 },
+    { pattern: /\bdocument\./, weight: 7 },
+  ],
+  typescript: [
+    { pattern: /\btype\s+\w+\s*=/, weight: 18 },
+    { pattern: /\binterface\s+\w+/, weight: 18 },
+    { pattern: /:\s*(string|number|boolean|unknown|any)\b/, weight: 14 },
+    { pattern: /\b(public|private|protected|readonly)\s+\w+/, weight: 10 },
+    { pattern: /<\w+>\s*\(/, weight: 7 },
+    { pattern: /\w+\??:\s*\w+/, weight: 7 },
+  ],
+  python: [
+    { pattern: /^\s*def\s+\w+\s*\(/m, weight: 22 },
+    { pattern: /^\s*class\s+\w+.*:\s*$/m, weight: 16 },
+    { pattern: /\bprint\s*\(/, weight: 10 },
+    { pattern: /^\s*import\s+\w+/m, weight: 8 },
+    { pattern: /^\s*from\s+\w+\s+import\s+/m, weight: 9 },
+    { pattern: /\bself\./, weight: 9 },
+    { pattern: /^\s*if\s+__name__\s*==\s*["']__main__["']\s*:/m, weight: 16 },
+  ],
+  java: [
+    { pattern: /\bpublic\s+class\s+\w+/, weight: 24 },
+    { pattern: /\bpublic\s+static\s+void\s+main\s*\(/, weight: 22 },
+    { pattern: /\bSystem\.out\.println\s*\(/, weight: 16 },
+    { pattern: /\bimport\s+java\./, weight: 12 },
+    { pattern: /\bnew\s+\w+\s*\(/, weight: 6 },
+    { pattern: /\bList<\w+>/, weight: 6 },
+  ],
+  go: [
+    { pattern: /^\s*package\s+\w+/m, weight: 28 },
+    { pattern: /^\s*func\s+\w+\s*\(/m, weight: 18 },
+    { pattern: /\bfmt\.Print/, weight: 16 },
+    { pattern: /\b:=/, weight: 12 },
+    { pattern: /\bdefer\s+/, weight: 8 },
+    { pattern: /\bgo\s+func\b/, weight: 7 },
+  ],
+  rust: [
+    { pattern: /^\s*fn\s+\w+\s*\(/m, weight: 20 },
+    { pattern: /\blet\s+mut\s+\w+/, weight: 14 },
+    { pattern: /\bprintln!\s*\(/, weight: 14 },
+    { pattern: /\bimpl\s+\w+/, weight: 10 },
+    { pattern: /\bmatch\s+\w+/, weight: 10 },
+    { pattern: /::\s*new\s*\(/, weight: 6 },
+    { pattern: /\bResult<.+>|\bOption<.+>/, weight: 10 },
+  ],
+  csharp: [
+    { pattern: /\busing\s+System\b/, weight: 18 },
+    { pattern: /\bnamespace\s+\w+/, weight: 10 },
+    { pattern: /\bConsole\.Write(Line)?\s*\(/, weight: 18 },
+    { pattern: /\bclass\s+\w+/, weight: 7 },
+    { pattern: /\bstatic\s+void\s+Main\s*\(/, weight: 18 },
+    { pattern: /\bvar\s+\w+\s*=/, weight: 5 },
+    { pattern: /\bIEnumerable<|List</, weight: 6 },
+  ],
+  php: [
+    { pattern: /<\?php/, weight: 34 },
+    { pattern: /\$\w+/, weight: 16 },
+    { pattern: /\becho\s+/, weight: 10 },
+    { pattern: /\bfunction\s+\w+\s*\(/, weight: 8 },
+    { pattern: /\barray_map\s*\(/, weight: 8 },
+    { pattern: /->\w+/, weight: 6 },
+  ],
+};
+
+const normalizeDetectionScore = (score, sourceLength) => {
+  const lengthBonus = sourceLength > 600 ? 10 : sourceLength > 180 ? 6 : 0;
+  return Math.min(99, Math.round(((score + lengthBonus) / 55) * 100));
+};
+
+export const detectSourceLanguage = (code = "", fileName = "") => {
+  const source = code.trim();
+  const detectedFromFileName = getLanguageFromFileName(fileName);
+
+  if (!source && !detectedFromFileName) {
+    return {
+      language: null,
+      confidence: 0,
+      source: "empty",
+      candidates: [],
+    };
+  }
+
+  const scores = Object.entries(detectionRules).map(([language, rules]) => {
+    const ruleScore = rules.reduce(
+      (score, rule) => score + (rule.pattern.test(source) ? rule.weight : 0),
+      0
+    );
+    const extensionScore = detectedFromFileName === language ? 36 : 0;
+    const confidence = normalizeDetectionScore(
+      ruleScore + extensionScore,
+      source.length
+    );
+
+    return {
+      language,
+      label: getLanguageOption(language)?.label || language,
+      confidence,
+      score: ruleScore + extensionScore,
+      source: extensionScore ? "file + content" : "content",
+    };
+  });
+
+  const rankedCandidates = scores
+    .filter((candidate) => candidate.confidence >= 18)
+    .sort((first, second) => second.confidence - first.confidence)
+    .slice(0, 4);
+  const bestCandidate = rankedCandidates[0];
+
+  if (!bestCandidate && detectedFromFileName) {
+    return {
+      language: detectedFromFileName,
+      confidence: 72,
+      source: "file",
+      candidates: [
+        {
+          language: detectedFromFileName,
+          label: getLanguageOption(detectedFromFileName)?.label || detectedFromFileName,
+          confidence: 72,
+          source: "file",
+        },
+      ],
+    };
+  }
+
+  return {
+    language: bestCandidate?.language || null,
+    confidence: bestCandidate?.confidence || 0,
+    source: bestCandidate?.source || "content",
+    candidates: rankedCandidates,
+  };
+};
