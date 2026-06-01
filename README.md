@@ -8,8 +8,6 @@
   <em>Translate code between programming languages instantly using Google Gemini and xAI Grok</em>
 </p>
 
-<br/>
-
 ![React](https://img.shields.io/badge/React-18.2-61DAFB?style=for-the-badge&logo=react&logoColor=white)
 ![Vite](https://img.shields.io/badge/Vite-5.4-646CFF?style=for-the-badge&logo=vite&logoColor=white)
 ![Node.js](https://img.shields.io/badge/Node.js-Express-339933?style=for-the-badge&logo=node.js&logoColor=white)
@@ -36,6 +34,14 @@
 **Appixo** is a sleek, modern web application that converts code between **7 programming languages** using the power of **Google Gemini** and **xAI Grok**. Whether you're migrating a project, learning a new language, or just curious how your code looks in another syntax — Appixo has you covered.
 
 > 💡 Paste your code, pick a target language, select your preferred AI engine, click convert — and get **idiomatic, production-ready** output with a detailed summary of what changed.
+
+<br/>
+
+## 📸 Interface
+
+<div align="center">
+  <img src="./frontend/src/assets/Convertor.png" alt="Appixo Code Converter Interface" style="border-radius: 10px; max-width: 100%; box-shadow: 0 10px 30px rgba(0,0,0,0.2);"/>
+</div>
 
 <br/>
 
