@@ -5,17 +5,16 @@ import {
   FiAlertCircle,
   FiCheckCircle,
   FiChevronRight,
-  FiCode,
   FiColumns,
   FiCopy,
   FiCpu,
+  FiDownload,
   FiFileText,
   FiPlay,
   FiRepeat,
   FiTerminal,
   FiTrash2,
   FiUploadCloud,
-  FiZap,
 } from "react-icons/fi";
 import "./App.css";
 import LiquidChrome from "./components/LiquidChrome";
@@ -26,16 +25,14 @@ import {
   detectSourceLanguage,
   exampleCodeByLanguage,
   getAceMode,
+  getFileExtension,
   getLanguageFromFileName,
   getLanguageOption,
   languageOptions,
 } from "./data/languages";
 import "ace-builds/src-noconflict/mode-c_cpp";
 import "ace-builds/src-noconflict/mode-csharp";
-import "ace-builds/src-noconflict/mode-golang";
-import "ace-builds/src-noconflict/mode-java";
 import "ace-builds/src-noconflict/mode-javascript";
-import "ace-builds/src-noconflict/mode-php";
 import "ace-builds/src-noconflict/mode-python";
 import "ace-builds/src-noconflict/mode-rust";
 import "ace-builds/src-noconflict/mode-typescript";
@@ -416,12 +413,6 @@ function App() {
     setResultModel("");
   };
 
-  const handleLoadExample = () => {
-    setSourceCode(exampleCodeByLanguage[sourceLanguage] || "");
-    setFileUploadMessage("");
-    setSourceFileName("");
-    resetResult();
-  };
 
   const handleSwapLanguages = () => {
     setIsSourceAutoDetecting(false);
@@ -448,6 +439,26 @@ function App() {
       setCopyMessage("Clipboard access is unavailable.");
       window.setTimeout(() => setCopyMessage(""), 2500);
     }
+  };
+
+  const handleDownloadResult = () => {
+    if (!convertedCode.trim()) {
+      return;
+    }
+
+    const extension = getFileExtension(targetLanguage);
+    const fileName = `converted_code${extension}`;
+    const blob = new Blob([convertedCode], { type: "text/plain;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const anchor = document.createElement("a");
+    anchor.href = url;
+    anchor.download = fileName;
+    document.body.appendChild(anchor);
+    anchor.click();
+    document.body.removeChild(anchor);
+    URL.revokeObjectURL(url);
+    setCopyMessage(`Downloaded as ${fileName}`);
+    window.setTimeout(() => setCopyMessage(""), 2500);
   };
 
   const handleClearWorkspace = () => {
@@ -633,7 +644,7 @@ function App() {
             )}
             <span>
               {backendStatus === "ready"
-                ? `${backendModel || "Gemini"} ${grokAvailable ? "· Grok ✓" : ""}`.trim()
+                ? "Ready"
                 : backendStatus === "checking"
                 ? "Checking backend"
                 : "Backend offline"}
@@ -761,15 +772,7 @@ function App() {
               ))}
             </div>
 
-            <button
-              className="ghost-button"
-              type="button"
-              onClick={handleLoadExample}
-              disabled={isConverting}
-            >
-              <FiCode aria-hidden="true" />
-              <span>Example</span>
-            </button>
+
             <button
               className="icon-button"
               type="button"
@@ -855,15 +858,27 @@ function App() {
                 <p className="pane-kicker">Result</p>
                 <h2>{targetLabel} workspace</h2>
               </div>
-              <button
-                className="ghost-button compact-button"
-                type="button"
-                onClick={handleCopyResult}
-                disabled={!hasConvertedCode}
-              >
-                <FiCopy aria-hidden="true" />
-                <span>Copy</span>
-              </button>
+              <div className="pane-header-actions">
+                <button
+                  className="ghost-button compact-button"
+                  type="button"
+                  onClick={handleCopyResult}
+                  disabled={!hasConvertedCode}
+                >
+                  <FiCopy aria-hidden="true" />
+                  <span>Copy</span>
+                </button>
+                <button
+                  className="ghost-button compact-button download-button"
+                  type="button"
+                  onClick={handleDownloadResult}
+                  disabled={!hasConvertedCode}
+                  title="Download converted code"
+                >
+                  <FiDownload aria-hidden="true" />
+                  <span>Download</span>
+                </button>
+              </div>
             </div>
 
             <div className="result-tabs" role="tablist" aria-label="Result views">
@@ -1062,19 +1077,13 @@ function App() {
             <div className="pane-statusbar">
               <span>
                 {copyMessage || (lastRunLabel ? `Last run ${lastRunLabel}` : "No conversion yet")}
-                {resultProvider ? (
-                  <span className={`provider-badge provider-badge-${resultProvider}`} style={{ marginLeft: 8 }}>
-                    <FiZap style={{ width: 10, height: 10 }} />
-                    {wasCached ? "⚡ Cached" : resultProvider === "grok" ? `Grok · ${resultModel}` : `Gemini · ${resultModel}`}
-                    {responseTime ? ` · ${responseTime}` : ""}
-                  </span>
-                ) : null}
               </span>
+
               <span>
                 {qualityScore !== null
                   ? `${qualityScore}% quality`
                   : outputLineCount
-                  ? `${outputLineCount} output lines`
+                  ? `${outputLineCount} lines`
                   : "Ready"}
               </span>
             </div>

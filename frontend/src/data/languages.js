@@ -7,11 +7,8 @@ export const languageOptions = [
   { value: "javascript", label: "JavaScript", aceMode: "javascript" },
   { value: "typescript", label: "TypeScript", aceMode: "typescript" },
   { value: "python", label: "Python", aceMode: "python" },
-  { value: "java", label: "Java", aceMode: "java" },
-  { value: "go", label: "Go", aceMode: "golang" },
   { value: "rust", label: "Rust", aceMode: "rust" },
   { value: "csharp", label: "C#", aceMode: "csharp" },
-  { value: "php", label: "PHP", aceMode: "php" },
 ];
 
 export const fileExtensionLanguageMap = {
@@ -32,11 +29,8 @@ export const fileExtensionLanguageMap = {
   ".cts": "typescript",
   ".mts": "typescript",
   ".py": "python",
-  ".java": "java",
-  ".go": "go",
   ".rs": "rust",
   ".cs": "csharp",
-  ".php": "php",
 };
 
 export const acceptedSourceFileExtensions = Object.keys(
@@ -129,36 +123,6 @@ console.log(username);`,
 
 
 print(fibonacci(34))`,
-  java: `import java.util.List;
-
-public class App {
-  public static long countLongWords(List<String> words) {
-    return words.stream()
-        .filter(word -> word.length() > 5)
-        .count();
-  }
-
-  public static void main(String[] args) {
-    System.out.println(countLongWords(List.of("convert", "code", "between", "languages")));
-  }
-}`,
-  go: `package main
-
-import "fmt"
-
-func average(values []int) float64 {
-  total := 0
-
-  for _, value := range values {
-    total += value
-  }
-
-  return float64(total) / float64(len(values))
-}
-
-func main() {
-  fmt.Println(average([]int{10, 20, 30, 40}))
-}`,
   rust: `fn reverse_words(text: &str) -> String {
     text
       .split_whitespace()
@@ -185,22 +149,6 @@ class Program
         Console.WriteLine(string.Join(", ", SquareAll(new[] { 1, 2, 3, 4 })));
     }
 }`,
-  php: `<?php
-
-function formatInventory(array $items): array
-{
-    return array_map(
-        fn ($item) => strtoupper($item["name"]) . ":" . $item["stock"],
-        $items
-    );
-}
-
-$inventory = [
-    ["name" => "keyboard", "stock" => 12],
-    ["name" => "mouse", "stock" => 18],
-];
-
-print_r(formatInventory($inventory));`,
 };
 
 export const getLanguageOption = (value) =>
@@ -208,6 +156,19 @@ export const getLanguageOption = (value) =>
 
 export const getAceMode = (value) =>
   getLanguageOption(value)?.aceMode || "text";
+
+export const languageFileExtension = {
+  c: ".c",
+  cpp: ".cpp",
+  javascript: ".js",
+  typescript: ".ts",
+  python: ".py",
+  rust: ".rs",
+  csharp: ".cs",
+};
+
+export const getFileExtension = (language) =>
+  languageFileExtension[language] || ".txt";
 
 export const getLanguageFromFileName = (fileName = "") => {
   const normalizedFileName = fileName.toLowerCase();
@@ -264,22 +225,6 @@ const detectionRules = {
     { pattern: /\bself\./, weight: 9 },
     { pattern: /^\s*if\s+__name__\s*==\s*["']__main__["']\s*:/m, weight: 16 },
   ],
-  java: [
-    { pattern: /\bpublic\s+class\s+\w+/, weight: 24 },
-    { pattern: /\bpublic\s+static\s+void\s+main\s*\(/, weight: 22 },
-    { pattern: /\bSystem\.out\.println\s*\(/, weight: 16 },
-    { pattern: /\bimport\s+java\./, weight: 12 },
-    { pattern: /\bnew\s+\w+\s*\(/, weight: 6 },
-    { pattern: /\bList<\w+>/, weight: 6 },
-  ],
-  go: [
-    { pattern: /^\s*package\s+\w+/m, weight: 28 },
-    { pattern: /^\s*func\s+\w+\s*\(/m, weight: 18 },
-    { pattern: /\bfmt\.Print/, weight: 16 },
-    { pattern: /\b:=/, weight: 12 },
-    { pattern: /\bdefer\s+/, weight: 8 },
-    { pattern: /\bgo\s+func\b/, weight: 7 },
-  ],
   rust: [
     { pattern: /^\s*fn\s+\w+\s*\(/m, weight: 20 },
     { pattern: /\blet\s+mut\s+\w+/, weight: 14 },
@@ -298,14 +243,7 @@ const detectionRules = {
     { pattern: /\bvar\s+\w+\s*=/, weight: 5 },
     { pattern: /\bIEnumerable<|List</, weight: 6 },
   ],
-  php: [
-    { pattern: /<\?php/, weight: 34 },
-    { pattern: /\$\w+/, weight: 16 },
-    { pattern: /\becho\s+/, weight: 10 },
-    { pattern: /\bfunction\s+\w+\s*\(/, weight: 8 },
-    { pattern: /\barray_map\s*\(/, weight: 8 },
-    { pattern: /->\w+/, weight: 6 },
-  ],
+
 };
 
 const normalizeDetectionScore = (score, sourceLength) => {

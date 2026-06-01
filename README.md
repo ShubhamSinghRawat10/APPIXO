@@ -5,7 +5,7 @@
 ### 🔄 AI-Powered Code Language Converter
 
 <p align="center">
-  <em>Translate code between programming languages instantly using Google Gemini AI</em>
+  <em>Translate code between programming languages instantly using Google Gemini and xAI Grok</em>
 </p>
 
 <br/>
@@ -14,12 +14,12 @@
 ![Vite](https://img.shields.io/badge/Vite-5.4-646CFF?style=for-the-badge&logo=vite&logoColor=white)
 ![Node.js](https://img.shields.io/badge/Node.js-Express-339933?style=for-the-badge&logo=node.js&logoColor=white)
 ![Gemini](https://img.shields.io/badge/Google_Gemini-AI-4285F4?style=for-the-badge&logo=google&logoColor=white)
-![Chakra UI](https://img.shields.io/badge/Chakra_UI-2.8-319795?style=for-the-badge&logo=chakraui&logoColor=white)
+![Grok](https://img.shields.io/badge/xAI_Grok-AI-101923?style=for-the-badge&logo=x&logoColor=white)
 
 <br/>
 
 [🚀 Features](#-features) •
-[📸 Screenshots](#-screenshots) •
+[💻 Supported Languages](#-supported-languages) •
 [🛠 Tech Stack](#-tech-stack) •
 [⚡ Quick Start](#-quick-start) •
 [📁 Project Structure](#-project-structure) •
@@ -33,9 +33,9 @@
 
 ## 🎯 What is Appixo?
 
-**Appixo** is a sleek, modern web application that converts code between **10 programming languages** using the power of **Google Gemini AI**. Whether you're migrating a project, learning a new language, or just curious how your code looks in another syntax — Appixo has you covered.
+**Appixo** is a sleek, modern web application that converts code between **7 programming languages** using the power of **Google Gemini** and **xAI Grok**. Whether you're migrating a project, learning a new language, or just curious how your code looks in another syntax — Appixo has you covered.
 
-> 💡 Paste your code, pick a target language, click convert — and get **idiomatic, production-ready** output with a detailed summary of what changed.
+> 💡 Paste your code, pick a target language, select your preferred AI engine, click convert — and get **idiomatic, production-ready** output with a detailed summary of what changed.
 
 <br/>
 
@@ -43,16 +43,13 @@
 
 | Feature | Description |
 |---|---|
-| 🔄 **Smart Code Conversion** | Translate code between 10 languages with one click |
-| 🤖 **Gemini AI Powered** | Uses Google's Gemini 2.0 Flash for accurate, context-aware translations |
-| 📝 **Custom Instructions** | Guide the conversion with your own style preferences |
-| 🏷️ **Preset Instructions** | Quick-apply common conversion guidelines |
-| 🔀 **Language Swap** | Instantly swap source and target languages |
-| 📋 **One-Click Copy** | Copy the converted output to clipboard |
-| 📊 **Conversion Insights** | Get a summary, key changes, and warnings for every conversion |
-| 🎨 **Stunning UI** | Glassmorphism design with liquid chrome animated background |
-| 📱 **Fully Responsive** | Works seamlessly on desktop, tablet, and mobile |
-| ⚡ **Real-Time Feedback** | Loading states, error banners, and health checks |
+| 🔄 **Smart Code Conversion** | Translate code between 7 languages with one click. |
+| 🤖 **Multi-Engine AI** | Choose between Google Gemini or xAI Grok for processing, or let Auto mode decide. |
+| 🔀 **Language Swap** | Instantly swap source and target languages. |
+| 📋 **One-Click Copy & Download** | Copy the converted output to clipboard or download it directly as a file with the correct extension. |
+| 📊 **Conversion Insights** | Get a summary, key changes, and warnings for every conversion, alongside a side-by-side diff. |
+| 🎨 **Professional UI** | Clean, responsive layout with a mesmerizing Liquid Chrome WebGL background and Inter typography. |
+| ⚡ **Real-Time Feedback** | Loading states, error banners, and backend health checks. |
 
 <br/>
 
@@ -64,9 +61,8 @@
 |---|---|---|---|
 | 🟦 | **C** | 🟧 | **C++** |
 | 🟨 | **JavaScript** | 🔵 | **TypeScript** |
-| 🐍 | **Python** | ☕ | **Java** |
-| 🐹 | **Go** | 🦀 | **Rust** |
-| 🟣 | **C#** | 🐘 | **PHP** |
+| 🐍 | **Python** | 🦀 | **Rust** |
+| 🟣 | **C#** | | |
 
 </div>
 
@@ -77,17 +73,17 @@
 ### 🎨 Frontend
 - **⚛️ React 18** — Component-based UI
 - **⚡ Vite** — Lightning-fast dev server & build tool
-- **🎭 Chakra UI** — Accessible component library
-- **🎬 Framer Motion** — Smooth animations
 - **✏️ Ace Editor** — Professional code editing with syntax highlighting
-- **📄 React Markdown** — Rich text rendering
 - **🌊 OGL** — WebGL liquid chrome background effect
+- **💅 Custom CSS** — Beautifully crafted, responsive, glassmorphic styles with CSS Grid & Flexbox
 
 ### ⚙️ Backend
 - **🟢 Node.js + Express** — RESTful API server
 - **🤖 Google Generative AI SDK** — Gemini integration with structured output
+- **✖️ xAI API** — Grok integration for fallback or primary conversion
 - **🔐 dotenv** — Secure environment variable management
 - **🔄 CORS** — Cross-origin request handling
+- **🧠 In-Memory Cache** — LRU cache for blazingly fast repeated conversions
 
 <br/>
 
@@ -98,6 +94,7 @@
 - **Node.js** `v18+` recommended
 - **npm** or **yarn**
 - **Google Gemini API Key** — [Get one free here](https://aistudio.google.com/app/apikey)
+- **xAI Grok API Key** (Optional) — [Get one here](https://console.x.ai/)
 
 ### 1️⃣ Clone the repository
 
@@ -118,9 +115,14 @@ Create a `.env` file in the `backend/` directory:
 ```env
 GEMINI_API_KEY=your_gemini_api_key_here
 GEMINI_MODEL=gemini-2.0-flash
-```
 
-> ⚠️ **Important:** Replace `your_gemini_api_key_here` with your actual Gemini API key.
+# Optional: Grok API Key for xAI engine
+GROK_API_KEY=your_grok_api_key_here
+GROK_MODEL=grok-3-mini-fast
+
+# Provider: "auto" (Gemini first, Grok fallback), "grok", or "gemini"
+PROVIDER=auto
+```
 
 Start the backend server:
 
@@ -138,11 +140,11 @@ npm install
 npm run dev
 ```
 
-The frontend will be running at `http://localhost:3000` 🎨
+The frontend will be running at `http://localhost:5173` (or port assigned by Vite) 🎨
 
 ### 4️⃣ Open & Enjoy! 🎉
 
-Navigate to **[http://localhost:3000](http://localhost:3000)** in your browser and start converting code!
+Navigate to the provided localhost URL in your browser and start converting code!
 
 <br/>
 
@@ -152,32 +154,24 @@ Navigate to **[http://localhost:3000](http://localhost:3000)** in your browser a
 APPIXO/
 │
 ├── 📂 backend/                    # Express API server
-│   ├── 📄 index.js                # Server entry point & API routes
+│   ├── 📄 index.js                # Server entry point, API routes & LRU cache
 │   ├── 📄 .env.example            # Environment variable template
 │   ├── 📄 .env                    # Your environment variables (git-ignored)
-│   ├── 📄 package.json            # Backend dependencies
-│   └── 📄 .gitignore
+│   └── 📄 package.json            # Backend dependencies
 │
 ├── 📂 frontend/                   # React + Vite application
 │   ├── 📂 src/
+│   │   ├── 📂 assets/             # Static assets
 │   │   ├── 📂 components/
-│   │   │   ├── 📄 CodeEditor.jsx       # Code editor wrapper
-│   │   │   ├── 📄 DisplayInformation.jsx # Result display
-│   │   │   ├── 📄 Footer.jsx           # Page footer
-│   │   │   ├── 📄 GithubLink.jsx       # GitHub import feature
-│   │   │   ├── 📄 LiquidChrome.jsx     # WebGL background effect
-│   │   │   ├── 📄 Loading.jsx          # Loading spinner
-│   │   │   └── 📄 Navbar.jsx           # Navigation bar
+│   │   │   └── 📄 LiquidChrome.jsx # WebGL background effect
 │   │   ├── 📂 data/
-│   │   │   └── 📄 languages.js         # Language configs & examples
-│   │   ├── 📂 pages/
-│   │   │   └── 📄 Home.jsx             # Main home page
-│   │   ├── 📂 utils/
-│   │   ├── 📄 App.jsx                  # Root application component
-│   │   ├── 📄 App.css                  # Global styles
-│   │   └── 📄 main.jsx                 # Vite entry point
-│   ├── 📄 vite.config.mjs              # Vite configuration
-│   └── 📄 package.json                 # Frontend dependencies
+│   │   │   └── 📄 languages.js    # Language configs & extensions map
+│   │   ├── 📄 App.jsx             # Main application component & UI logic
+│   │   ├── 📄 App.css             # Component-specific styles
+│   │   ├── 📄 index.css           # Global typography and base styles
+│   │   └── 📄 main.jsx            # Vite entry point
+│   ├── 📄 vite.config.mjs         # Vite configuration
+│   └── 📄 package.json            # Frontend dependencies
 │
 └── 📄 README.md                   # You are here! 👋
 ```
@@ -188,7 +182,7 @@ APPIXO/
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
-| `GET` | `/api/health` | 🏥 Health check — returns server status and Gemini config |
+| `GET` | `/api/health` | 🏥 Health check — returns server status, Gemini & Grok config, and cache stats |
 | `POST` | `/api/convert` | 🔄 Convert code between languages |
 
 ### 📨 Convert Request Body
@@ -198,7 +192,8 @@ APPIXO/
   "sourceLanguage": "python",
   "targetLanguage": "javascript",
   "sourceCode": "def hello():\n    print('Hello, World!')",
-  "instructions": "Keep it clean and idiomatic"
+  "instructions": "Keep it clean and idiomatic",
+  "provider": "auto"
 }
 ```
 
@@ -212,7 +207,9 @@ APPIXO/
   "summary": "Converted Python function to JavaScript using console.log for output.",
   "keyChanges": ["Replaced print() with console.log()", "Used function declaration"],
   "warnings": [],
-  "model": "gemini-2.0-flash"
+  "model": "gemini-2.0-flash",
+  "provider": "gemini",
+  "responseTime": "1.42s"
 }
 ```
 
@@ -220,11 +217,11 @@ APPIXO/
 
 ## 🎨 Design Highlights
 
-- 🌊 **Liquid Chrome Background** — mesmerizing WebGL-powered animated backdrop
-- 🪟 **Glassmorphism UI** — frosted-glass panels with backdrop blur
-- 🌈 **Custom Color Palette** — teal primary, warm orange accents on a deep dark surface
-- ✨ **Micro-Animations** — smooth hover effects, transitions, and button feedback
-- 📐 **Responsive Grid Layout** — adapts beautifully from mobile to ultrawide
+- 🌊 **Liquid Chrome Background** — mesmerizing WebGL-powered animated backdrop.
+- 🪟 **Glassmorphism UI** — frosted-glass panels with backdrop blur and custom shadow depth.
+- 📐 **Professional Typography** — completely restyled with the Inter font family for a clean, modern dev-tool feel.
+- 📱 **Flawless Responsiveness** — flex-wrap architecture that naturally adapts elements to mobile and tablet screens without squishing.
+- 📥 **Native File Export** — seamlessly download generated code directly with matching extensions.
 
 <br/>
 
