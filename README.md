@@ -40,7 +40,7 @@
 ## 📸 Interface
 
 <div align="center">
-  <img src="./frontend/src/assets/Convertor.png" alt="Appixo Code Converter Interface" style="border-radius: 10px; max-width: 100%; box-shadow: 0 10px 30px rgba(0,0,0,0.2);"/>
+  <img src="Convertor.png"/>
 </div>
 
 <br/>
